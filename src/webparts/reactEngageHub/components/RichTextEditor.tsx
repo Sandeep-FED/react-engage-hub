@@ -1,6 +1,5 @@
 import * as React from "react"
-import { useRef, useEffect, useState } from "react"
-import { Editor } from "roosterjs-content-model-core"
+import { useState } from "react"
 import { EditorToolbar } from "../components/EditorToobar/EditorToolbar"
 import {
   Button,
@@ -11,17 +10,20 @@ import {
   Spinner,
   tokens,
 } from "@fluentui/react-components"
-import { AutoFormatPlugin, HyperlinkPlugin } from "roosterjs"
+import { CollapseRelaxed } from "@fluentui/react-motion-components-preview"
+
 import { usePostSubmission } from "../../hooks/usePostSubmission"
 import { useImageUpload } from "../../hooks/useImageUpload"
-import { addNewPost } from "../services/SPService"
-import { WEBPARTCONTEXT } from "../../context/webPartContext"
-import { IReactEngageHubProps } from "../IReactEngageHubProps"
-import { CollapseRelaxed } from "@fluentui/react-motion-components-preview"
-import { ContentChangePlugin } from "./plugins/ContentChangePlugin"
-import styles from "../ReactEngageHub.module.scss"
+import { useRoosterEditor } from "../../hooks/useRoosterEditor"
+
 import { ImagePreview } from "./ImagePreview"
+
 import { SendIcon } from "../../constants/icons"
+import { WEBPARTCONTEXT } from "../../context/webPartContext"
+
+import { addNewPost } from "../services/SPService"
+import { IReactEngageHubProps } from "../IReactEngageHubProps"
+import styles from "../ReactEngageHub.module.scss"
 
 const useStyles = makeStyles({
   textEditor: {
@@ -75,8 +77,6 @@ interface IRichTextEditorProps {
 
 export const RichTextEditor = (props: IRichTextEditorProps) => {
   const [content, setContent] = useState<any>(null)
-  const editorDivRef = useRef<HTMLDivElement>(null)
-  const [editor, setEditor] = useState<Editor | null>(null)
 
   const { isDarkTheme } = React.useContext<IReactEngageHubProps>(WEBPARTCONTEXT)
 
@@ -102,30 +102,11 @@ export const RichTextEditor = (props: IRichTextEditorProps) => {
     window.open(anchor.href, "_blank")
   }
 
-  useEffect(() => {
-    if (editorDivRef.current && !editor) {
-      const rooster = new Editor(editorDivRef.current, {
-        plugins: [
-          new AutoFormatPlugin({
-            autoBullet: true,
-            autoLink: true,
-            autoNumbering: true,
-            autoUnlink: false,
-            autoHyphen: true,
-            autoFraction: true,
-            autoOrdinals: true,
-          }),
-          new HyperlinkPlugin(undefined, "_blank", handleLink),
-          ContentChangePlugin((html) => setContent(html)),
-        ],
-      })
-      rooster.setDarkModeState(isDarkTheme)
-      setEditor(rooster)
-    }
-    return () => {
-      editor?.dispose()
-    }
-  }, [])
+  const { editor, editorDivRef } = useRoosterEditor({
+    isDarkTheme,
+    setContent,
+    handleLink,
+  })
 
   const buttonIcon =
     loadingState === "loading" ? <Spinner size='tiny' /> : <SendIcon />
