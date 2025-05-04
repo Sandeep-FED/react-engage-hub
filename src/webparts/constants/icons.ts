@@ -32,10 +32,10 @@ import {
   TextStrikethrough20Filled,
   TextUnderline20Regular,
   TextUnderline20Filled,
-  Highlight20Regular,
-  Highlight20Filled,
-  TextColor20Regular,
-  TextColor20Filled,
+  FontIncrease20Filled,
+  FontIncrease20Regular,
+  FontDecrease20Filled,
+  FontDecrease20Regular,
 } from "@fluentui/react-icons"
 
 export const LikeIcon = bundleIcon(Heart20Color, Heart20Regular)
@@ -80,7 +80,12 @@ export const TextUnderlineIcon = bundleIcon(
   TextUnderline20Filled,
   TextUnderline20Regular
 )
+export const FontIncreaseIcon = bundleIcon(
+  FontIncrease20Filled,
+  FontIncrease20Regular
+)
 
-export const HighlightIcon = bundleIcon(Highlight20Filled, Highlight20Regular)
-
-export const TextColorIcon = bundleIcon(TextColor20Filled, TextColor20Regular)
+export const FontDecreaseIcon = bundleIcon(
+  FontDecrease20Filled,
+  FontDecrease20Regular
+)
