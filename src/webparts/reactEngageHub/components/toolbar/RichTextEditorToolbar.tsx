@@ -84,7 +84,7 @@ const OverflowMenu = ({ itemIds, items, editor, isDisabled }: any) => {
   )
 }
 
-export const EditorToolbar = (props: any) => {
+export const RichTextEditorToolbar = (props: any) => {
   const { editor, images, maxFileLimit, addImages } = props
   const isDisabled = !editor
   const alertDialog = useAlertDialog()

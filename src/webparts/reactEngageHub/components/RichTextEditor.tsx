@@ -1,13 +1,20 @@
 import * as React from "react"
 import { useState } from "react"
-import { EditorToolbar } from "../components/EditorToobar/EditorToolbar"
+import { RichTextEditorToolbar } from "./toolbar/RichTextEditorToolbar"
 import {
   Button,
   buttonClassNames,
   Card,
   Link,
   makeStyles,
+  Menu,
+  MenuButtonProps,
+  MenuItem,
+  MenuList,
+  MenuPopover,
+  MenuTrigger,
   Spinner,
+  SplitButton,
   tokens,
 } from "@fluentui/react-components"
 import { CollapseRelaxed } from "@fluentui/react-motion-components-preview"
@@ -18,12 +25,13 @@ import { useRoosterEditor } from "../../hooks/useRoosterEditor"
 
 import { ImagePreview } from "./ImagePreview"
 
-import { SendIcon } from "../../constants/icons"
+import { SendIcon, SparkleBundle } from "../../constants/icons"
 import { WEBPARTCONTEXT } from "../../context/webPartContext"
 
 import { addNewPost } from "../services/SPService"
 import { IReactEngageHubProps } from "../IReactEngageHubProps"
 import styles from "../ReactEngageHub.module.scss"
+import { useAITextActions } from "../../hooks/useAITextActions"
 
 const useStyles = makeStyles({
   textEditor: {
@@ -84,7 +92,7 @@ export const RichTextEditor = (props: IRichTextEditorProps) => {
 
   const fluentStyles = useStyles()
 
-  const { context, maxFileLimit } =
+  const { context, maxFileLimit, apiKey, apiEndpoint, deploymentName } =
     React.useContext<IReactEngageHubProps>(WEBPARTCONTEXT)
 
   const { images, addImages, clearImages, removeImage } = useImageUpload()
@@ -118,6 +126,18 @@ export const RichTextEditor = (props: IRichTextEditorProps) => {
 
   const postButtonLabel = loadingState === "loading" ? "Posting..." : "Post"
 
+  const { handleRewrite, handleGrammarFix } = useAITextActions({
+    apiKey,
+    apiEndpoint,
+    deploymentName,
+    content,
+    setContent,
+  })
+
+  const primaryActionButtonProps = {
+    onClick: handleRewrite,
+  }
+
   return (
     <>
       <CollapseRelaxed visible={isCompactView === false ? true : false}>
@@ -126,7 +146,7 @@ export const RichTextEditor = (props: IRichTextEditorProps) => {
           style={{ display: isCompactView ? "none" : "block" }}
         >
           {editor && (
-            <EditorToolbar
+            <RichTextEditorToolbar
               editor={editor}
               images={images}
               maxFileLimit={maxFileLimit}
@@ -151,6 +171,25 @@ export const RichTextEditor = (props: IRichTextEditorProps) => {
             contentEditable
           />
           <div className={fluentStyles.actionBtnWrapper}>
+            <Menu positioning='below-end'>
+              <MenuTrigger disableButtonEnhancement>
+                {(triggerProps: MenuButtonProps) => (
+                  <SplitButton
+                    appearance='subtle'
+                    menuButton={triggerProps}
+                    primaryActionButton={primaryActionButtonProps}
+                    icon={<SparkleBundle />}
+                  >
+                    AI Rewrite
+                  </SplitButton>
+                )}
+              </MenuTrigger>
+              <MenuPopover>
+                <MenuList>
+                  <MenuItem onClick={handleGrammarFix}>Grammar fix</MenuItem>
+                </MenuList>
+              </MenuPopover>
+            </Menu>
             <Link
               className={fluentStyles.collapseBtn}
               onClick={() => setIsCompactView(!isCompactView)}
