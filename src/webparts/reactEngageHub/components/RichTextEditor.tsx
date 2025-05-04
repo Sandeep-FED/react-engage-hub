@@ -40,7 +40,7 @@ import styles from "../ReactEngageHub.module.scss"
 
 const useStyles = makeStyles({
   textEditor: {
-    minHeight: "200px",
+    minHeight: "120px",
     overflow: "scroll",
     caretColor: tokens.colorBrandBackground,
     color: "white",
@@ -111,15 +111,6 @@ export const RichTextEditor = (props: IRichTextEditorProps) => {
 
   const { images, addImages, clearImages, removeImage } = useImageUpload()
 
-  const { submitPost, loadingState } = usePostSubmission({
-    addNewPost,
-    onPostSubmit,
-    clearImages,
-    setContent,
-    setIsCompactView,
-    context,
-  })
-
   const handleLink = (anchor: HTMLAnchorElement, mouseEvent: MouseEvent) => {
     window.open(anchor.href, "_blank")
   }
@@ -130,7 +121,17 @@ export const RichTextEditor = (props: IRichTextEditorProps) => {
     handleLink,
   })
 
-  const { handleAIAction } = useAITextActions({
+  const { submitPost, loadingState } = usePostSubmission({
+    addNewPost,
+    onPostSubmit,
+    clearImages,
+    setContent,
+    setIsCompactView,
+    context,
+    editorDivRef,
+  })
+
+  const { handleAIAction, isLoading } = useAITextActions({
     apiKey,
     apiEndpoint,
     deploymentName,
@@ -163,7 +164,10 @@ export const RichTextEditor = (props: IRichTextEditorProps) => {
       <CollapseRelaxed visible={isCompactView === false ? true : false}>
         <Card
           className={fluentStyles.wrapper}
-          style={{ display: isCompactView ? "none" : "block" }}
+          style={{
+            display: isCompactView ? "none" : "block",
+            pointerEvents: isLoading ? "none" : "auto",
+          }}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
@@ -189,8 +193,14 @@ export const RichTextEditor = (props: IRichTextEditorProps) => {
           )}
           <div
             ref={editorDivRef}
-            className={fluentStyles.textEditor}
-            contentEditable
+            className={
+              isLoading
+                ? `${fluentStyles.textEditor} ${styles.textEditorLoading}`
+                : fluentStyles.textEditor
+            }
+            contentEditable={!isLoading}
+            aria-disabled={isLoading}
+            suppressContentEditableWarning
           />
           <div className={fluentStyles.actionBtnWrapper}>
             <Menu>
