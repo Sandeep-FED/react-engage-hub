@@ -7,13 +7,11 @@ import {
   Card,
   makeStyles,
   Menu,
-  MenuButtonProps,
   MenuItem,
   MenuList,
   MenuPopover,
   MenuTrigger,
   Spinner,
-  SplitButton,
   tokens,
 } from "@fluentui/react-components"
 import {
@@ -24,16 +22,17 @@ import {
 import { usePostSubmission } from "../../hooks/usePostSubmission"
 import { useImageUpload } from "../../hooks/useImageUpload"
 import { useRoosterEditor } from "../../hooks/useRoosterEditor"
+import { useAITextActions } from "../../hooks/useAITextActions"
 
 import { ImagePreview } from "./ImagePreview"
 
 import { ArrowUpIcon, SendIcon, SparkleBundle } from "../../constants/icons"
+import { AI_OPTIONS } from "../../constants/ai"
 import { WEBPARTCONTEXT } from "../../context/webPartContext"
 
 import { addNewPost } from "../services/SPService"
 import { IReactEngageHubProps } from "../IReactEngageHubProps"
 import styles from "../ReactEngageHub.module.scss"
-import { useAITextActions } from "../../hooks/useAITextActions"
 
 const useStyles = makeStyles({
   textEditor: {
@@ -48,10 +47,6 @@ const useStyles = makeStyles({
     flexShrink: " 0",
     overflow: "unset",
     position: "relative",
-    "&:hover .collapseBtn": {
-      opacity: 1,
-      pointerEvents: "auto",
-    },
   },
   postBtn: {
     width: "fit-content",
@@ -128,6 +123,15 @@ export const RichTextEditor = (props: IRichTextEditorProps) => {
     handleLink,
   })
 
+  const { handleAIAction } = useAITextActions({
+    apiKey,
+    apiEndpoint,
+    deploymentName,
+    content,
+    setContent,
+    editorDivRef,
+  })
+
   const buttonIcon =
     loadingState === "loading" ? <Spinner size='tiny' /> : <SendIcon />
 
@@ -137,18 +141,6 @@ export const RichTextEditor = (props: IRichTextEditorProps) => {
       : fluentStyles.buttonNonInteractive
 
   const postButtonLabel = loadingState === "loading" ? "Posting..." : "Post"
-
-  const { handleRewrite, handleGrammarFix } = useAITextActions({
-    apiKey,
-    apiEndpoint,
-    deploymentName,
-    content,
-    setContent,
-  })
-
-  const primaryActionButtonProps = {
-    onClick: handleRewrite,
-  }
 
   return (
     <>
@@ -185,22 +177,24 @@ export const RichTextEditor = (props: IRichTextEditorProps) => {
             contentEditable
           />
           <div className={fluentStyles.actionBtnWrapper}>
-            <Menu positioning='below-end'>
+            <Menu>
               <MenuTrigger disableButtonEnhancement>
-                {(triggerProps: MenuButtonProps) => (
-                  <SplitButton
-                    appearance='subtle'
-                    menuButton={triggerProps}
-                    primaryActionButton={primaryActionButtonProps}
-                    icon={<SparkleBundle />}
-                  >
-                    AI Rewrite
-                  </SplitButton>
-                )}
+                <Button appearance='subtle' icon={<SparkleBundle />} />
               </MenuTrigger>
               <MenuPopover>
                 <MenuList>
-                  <MenuItem onClick={handleGrammarFix}>Grammar fix</MenuItem>
+                  {AI_OPTIONS.map((item, index) => {
+                    return (
+                      <MenuItem
+                        key={index}
+                        onClick={() => {
+                          handleAIAction(item)
+                        }}
+                      >
+                        {item}
+                      </MenuItem>
+                    )
+                  })}
                 </MenuList>
               </MenuPopover>
             </Menu>
