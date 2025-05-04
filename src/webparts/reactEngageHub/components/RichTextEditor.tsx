@@ -1,5 +1,5 @@
 import * as React from "react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { RichTextEditorToolbar } from "./toolbar/RichTextEditorToolbar"
 import {
   Button,
@@ -26,7 +26,11 @@ import { useAITextActions } from "../../hooks/useAITextActions"
 
 import { ImagePreview } from "./ImagePreview"
 
-import { ArrowUpIcon, SendIcon, SparkleBundle } from "../../constants/icons"
+import {
+  ChevronCircleUpIcon,
+  SendIcon,
+  SparkleBundle,
+} from "../../constants/icons"
 import { AI_OPTIONS } from "../../constants/ai"
 import { WEBPARTCONTEXT } from "../../context/webPartContext"
 
@@ -41,6 +45,9 @@ const useStyles = makeStyles({
     caretColor: tokens.colorBrandBackground,
     color: "white",
     outline: "none",
+    marginTop: "0.5rem",
+    marginBottom: "0.5rem",
+    padding: "0.5rem",
   },
   wrapper: {
     padding: "1rem !important",
@@ -132,6 +139,15 @@ export const RichTextEditor = (props: IRichTextEditorProps) => {
     editorDivRef,
   })
 
+  useEffect(() => {
+    if (editorDivRef.current) {
+      editorDivRef.current.style.background = isDarkTheme
+        ? "transparent"
+        : "#fff"
+      editorDivRef.current.style.color = isDarkTheme ? "#fff" : "#222"
+    }
+  }, [isDarkTheme])
+
   const buttonIcon =
     loadingState === "loading" ? <Spinner size='tiny' /> : <SendIcon />
 
@@ -201,7 +217,7 @@ export const RichTextEditor = (props: IRichTextEditorProps) => {
             <Fade visible={!isCompactView && isHovered}>
               <Button
                 onClick={() => setIsCompactView(!isCompactView)}
-                icon={<ArrowUpIcon />}
+                icon={<ChevronCircleUpIcon />}
                 shape='circular'
                 className={fluentStyles.collapseBtn}
               />
