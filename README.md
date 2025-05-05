@@ -41,21 +41,21 @@ This sample is optimally compatible with the following environment configuration
 
 ## Prerequisites
 
-Create a SharePoint  list `Discussion Point` in the SPO site with below columns
+Create a SharePoint list `Discussion Point` in the SPO site with below columns
 
-| Column Name | Type  |
-| ----------- | ----- |
-| Description       | Multi-line text with enhanced text enabled  |
-| UserID | Text  |
-| PostID | Text  |
-| AuthorName   | Text |
-| AuthorMailID   | Text |
+| Column Name  | Type                                       |
+| ------------ | ------------------------------------------ |
+| Description  | Multi-line text with enhanced text enabled |
+| UserID       | Text                                       |
+| PostID       | Text                                       |
+| AuthorName   | Text                                       |
+| AuthorMailID | Text                                       |
 
 Create a Document library `Discussion Point Gallery` in SPO site & create one new column
 
-| Column Name | Type  |
-| ----------- | ----- |
-| PostID   | Text |
+| Column Name | Type |
+| ----------- | ---- |
+| PostID      | Text |
 
 ## Contributors🧑‍💻
 
@@ -63,9 +63,10 @@ Create a Document library `Discussion Point Gallery` in SPO site & create one ne
 
 ## Version history
 
-| Version | Date             | Comments                            |
-| ------- | ---------------- | ----------------------------------- |
-| 1.0     | April 27, 2025   | Initial release                     |
+| Version | Date           | Comments                                                                                 |
+| ------- | -------------- | ---------------------------------------------------------------------------------------- |
+| 1.0     | April 27, 2025 | Initial release                                                                          |
+| 1.1     | May 4, 2025    | Add support for Rich Text, MSFT Notepad inspired AI features & other improvements Editor |
 
 ## Minimal Path to Awesome⚡
 
@@ -79,6 +80,7 @@ Create a Document library `Discussion Point Gallery` in SPO site & create one ne
 
 - Ensure that you are at the solution folder
 - in the command-line run:
+
   - `gulp build --ship`
   - `gulp bundle --ship`
   - `gulp package-solution --ship`
