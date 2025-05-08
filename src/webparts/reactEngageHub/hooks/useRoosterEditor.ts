@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { Editor } from "roosterjs-content-model-core"
 import { AutoFormatPlugin, HyperlinkPlugin } from "roosterjs"
-import { ContentChangePlugin } from "../reactEngageHub/components/plugins/ContentChangePlugin"
+import { ContentChangePlugin } from "../components/toolbar/plugins/ContentChangePlugin"
 
 type RoosterEditorProps = {
   isDarkTheme: boolean

@@ -4,7 +4,7 @@ import {
   lengthenPostContents,
   reWritePostContents,
   shortenPostContents,
-} from "../reactEngageHub/services/AOAIService"
+} from "../services/AOAIService"
 import { useContext } from "react"
 import { WEBPARTCONTEXT } from "../context/webPartContext"
 import { APIVERSION } from "../constants/ai"

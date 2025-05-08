@@ -12,7 +12,7 @@ import { WebPartTitle } from "@pnp/spfx-controls-react/lib/WebPartTitle"
 
 import type { IReactEngageHubProps } from "./IReactEngageHubProps"
 import { Posts } from "./components/Posts"
-import { WEBPARTCONTEXT } from "../context/webPartContext"
+import { WEBPARTCONTEXT } from "../reactEngageHub/context/webPartContext"
 import { CompactTextArea } from "./components/CompactTextArea"
 import { RichTextEditor } from "./components/RichTextEditor"
 

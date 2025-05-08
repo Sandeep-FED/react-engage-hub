@@ -18,7 +18,7 @@ import {
 import { MoreHorizontal20Filled } from "@fluentui/react-icons"
 import { toolbarItems } from "./ToolbarItems"
 import { ImageUploader } from "../ImageUploader"
-import { useAlertDialog } from "../../../hooks/useAlertDialog"
+import { useAlertDialog } from "../../hooks/useAlertDialog"
 
 const ToolbarOverflowMenuItem = ({
   id,

@@ -20,10 +20,10 @@ import {
   Fade,
 } from "@fluentui/react-motion-components-preview"
 
-import { usePostSubmission } from "../../hooks/usePostSubmission"
-import { useImageUpload } from "../../hooks/useImageUpload"
-import { useRoosterEditor } from "../../hooks/useRoosterEditor"
-import { useAITextActions } from "../../hooks/useAITextActions"
+import { usePostSubmission } from "../hooks/usePostSubmission"
+import { useImageUpload } from "../hooks/useImageUpload"
+import { useRoosterEditor } from "../hooks/useRoosterEditor"
+import { useAITextActions } from "../hooks/useAITextActions"
 
 import { ImagePreview } from "./ImagePreview"
 
@@ -31,19 +31,19 @@ import {
   ChevronCircleUpIcon,
   SendIcon,
   SparkleBundle,
-} from "../../constants/icons"
-import { AI_OPTIONS } from "../../constants/ai"
-import { WEBPARTCONTEXT } from "../../context/webPartContext"
+} from "../constants/icons"
+import { AI_OPTIONS } from "../constants/ai"
+import { WEBPARTCONTEXT } from "../context/webPartContext"
 
 import { addNewPost } from "../services/SPService"
 import { IReactEngageHubProps } from "../IReactEngageHubProps"
 import styles from "../ReactEngageHub.module.scss"
-import { useCommentSubmission } from "../../hooks/useCommentSubmission"
+import { useCommentSubmission } from "../hooks/useCommentSubmission"
 
 const useStyles = makeStyles({
   textEditor: {
     height: "140px",
-    overflow: "scroll",
+    overflowY: "scroll",
     caretColor: tokens.colorBrandBackground,
     color: "white",
     outline: "none",

@@ -12,7 +12,7 @@ import {
   TextUnderlineIcon,
   FontIncreaseIcon,
   FontDecreaseIcon,
-} from "../../../constants/icons"
+} from "../../constants/icons"
 import {
   toggleBold,
   toggleItalic,
