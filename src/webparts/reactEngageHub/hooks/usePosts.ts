@@ -1,8 +1,10 @@
 import { useCallback, useState } from "react"
 import { getPosts } from "../services/SPService"
+import { useAtom } from "jotai"
+import { postsAtom } from "../atoms/globalAtoms"
 
 export const usePosts = (context: any) => {
-  const [posts, setPosts] = useState<any>([])
+  const [, setPosts] = useAtom(postsAtom)
   const [nextLink, setNextLink] = useState<string | undefined>()
   const [hasMore, setHasMore] = useState<boolean>(true)
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -11,6 +13,7 @@ export const usePosts = (context: any) => {
     setIsLoading(true)
     const data = await getPosts(context)
     setPosts(data.items)
+    console.log(data.items,'posts')
     setHasMore(data.hasMore)
     setNextLink(data.nextLink)
     setIsLoading(false)
@@ -34,5 +37,5 @@ export const usePosts = (context: any) => {
     }
   }, [context, nextLink, hasMore])
 
-  return { fetchPosts, fetchMorePosts, posts, hasMore, isLoading, nextLink }
+  return { fetchPosts, fetchMorePosts, hasMore, isLoading, nextLink }
 }

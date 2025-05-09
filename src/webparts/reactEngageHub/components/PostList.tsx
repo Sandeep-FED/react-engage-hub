@@ -8,16 +8,17 @@ import { ImagePreview } from "./ImagePreview"
 import { MoreOptions } from "./MoreOptions"
 import { PostActions } from "./PostActions"
 import { RichTextEditor } from "./RichTextEditor"
+import { postsAtom } from "../atoms/globalAtoms"
+import { useAtom } from "jotai"
+import { updatePostLikeUnlike } from "../services/SPService"
 
 interface IPostListProps {
-  posts: any[]
   context: any
   isDarkTheme: boolean
   fluentStyles: any
   isCompactView: boolean
   setIsCompactView: React.Dispatch<React.SetStateAction<boolean>>
   fetchPosts: () => Promise<void>
-  onClickPostLikeBtn: (postId: number, postLike: boolean) => void
   handlePostDelete: (postId: string, itemId: number) => Promise<void>
 }
 
@@ -25,21 +26,36 @@ export const PostList = (props: IPostListProps) => {
   const [isCommentCompactView, setIsCommentCompactView] = React.useState<{
     [key: number]: boolean
   }>({})
+  const [posts,setPosts] = useAtom(postsAtom)
 
   const {
-    posts,
     context,
     isDarkTheme,
     fluentStyles,
     fetchPosts,
-    onClickPostLikeBtn,
     handlePostDelete,
   } = props
+
+  const onClickPostLikeBtn = async (postId: number, postLike: boolean) => {
+    await updatePostLikeUnlike(postId, postLike)
+    // Update the local state based on the action
+    setPosts((prevPosts) =>
+      prevPosts.map((post) =>
+        post.ID === postId
+          ? {
+            ...post,
+            LikesCount: postLike ? post.LikesCount - 1 : post.LikesCount + 1, 
+            isLiked:!postLike
+          }
+          : post
+      )
+    );
+  }
 
   return (
     <>
       {posts &&
-        posts.map((post: any) => (
+        posts.map((post) => (
           <Card key={post.ID} className={fluentStyles.card}>
             <article key={post.ID} className={styles.article}>
               <div className={styles.topContainer}>
@@ -50,13 +66,13 @@ export const PostList = (props: IPostListProps) => {
                 </div>
                 {post.UserID ===
                   context.pageContext.legacyPageContext?.userPuid && (
-                  <MoreOptions
-                    id={post.PostID}
-                    dialogTitle='Delete post'
-                    dialogDescription='Are you sure you want to delete this post?'
-                    onClickDelete={() => handlePostDelete(post.PostID, post.ID)}
-                  />
-                )}
+                    <MoreOptions
+                      id={post.PostID}
+                      dialogTitle='Delete post'
+                      dialogDescription='Are you sure you want to delete this post?'
+                      onClickDelete={() => handlePostDelete(post.PostID, post.ID)}
+                    />
+                  )}
               </div>
               <div
                 dangerouslySetInnerHTML={{
@@ -75,7 +91,7 @@ export const PostList = (props: IPostListProps) => {
               <div className={fluentStyles.postActions}>
                 <PostActions
                   post={post}
-                  onClickPostLikeBtn={onClickPostLikeBtn}
+                  onClickPostLikeBtn={()=>onClickPostLikeBtn(post.ID,post.isLiked)}
                   setIsCommentCompactView={setIsCommentCompactView}
                 />
               </div>

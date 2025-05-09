@@ -8,8 +8,10 @@ import { IReactEngageHubProps } from "../IReactEngageHubProps"
 import { usePosts } from "../hooks/usePosts"
 import { useInfiniteScroll } from "../hooks/useInfiniteScroll"
 import { PostList } from "./PostList"
+import { useAtom } from "jotai"
+import { isCompactViewAtom, postsAtom } from "../atoms/globalAtoms"
 
-export interface IPostsProps {}
+export interface IPostsProps { }
 
 const useStyles = makeStyles({
   newCommentBtn: {
@@ -59,7 +61,9 @@ const useStyles = makeStyles({
 })
 export const Posts = ({ refreshTrigger }: any) => {
   const [isLoaderRef, setLoaderRef] = React.useState<boolean>(false)
-  const [isCompactView, setIsCompactView] = React.useState(true)
+  const [isCompactView, setIsCompactView] = useAtom(isCompactViewAtom)
+
+  const [posts] = useAtom(postsAtom)
 
   const { context, isDarkTheme } =
     React.useContext<IReactEngageHubProps>(WEBPARTCONTEXT)
@@ -67,7 +71,7 @@ export const Posts = ({ refreshTrigger }: any) => {
 
   const fluentStyles = useStyles()
 
-  const { fetchPosts, fetchMorePosts, posts, hasMore, isLoading, nextLink } =
+  const { fetchPosts, fetchMorePosts, hasMore, isLoading, nextLink } =
     usePosts(context)
 
   useInfiniteScroll(loaderRef, isLoaderRef, hasMore, nextLink, fetchMorePosts)
@@ -75,11 +79,6 @@ export const Posts = ({ refreshTrigger }: any) => {
   useEffect(() => {
     fetchPosts()
   }, [refreshTrigger])
-
-  const onClickPostLikeBtn = async (postId: number, postLike: boolean) => {
-    await updatePostLikeUnlike(postId, postLike)
-    await fetchPosts()
-  }
 
   const handlePostDelete = async (postId: string, itemId: number) => {
     await deletePost(postId, itemId)
@@ -111,14 +110,12 @@ export const Posts = ({ refreshTrigger }: any) => {
       </Text>
       <div className={fluentStyles.postCardWrapper}>
         <PostList
-          posts={posts}
           context={context}
           isDarkTheme={isDarkTheme}
           fluentStyles={fluentStyles}
           isCompactView={isCompactView}
           setIsCompactView={setIsCompactView}
           fetchPosts={fetchPosts}
-          onClickPostLikeBtn={onClickPostLikeBtn}
           handlePostDelete={handlePostDelete}
         />
         {hasMore && nextLink && (
